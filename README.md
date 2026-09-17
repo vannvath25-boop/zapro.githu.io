@@ -30,60 +30,40 @@
 </head>
 <body class="p-2 sm:p-4 md:p-6 min-h-screen pb-12">
 
-  <!-- Header Section -->
+  <!-- Header Section with Logo & About Button -->
   <header class="max-w-4xl mx-auto mb-4">
     <div class="glass-card rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3 border-l-4 border-amber-500 shadow-xl">
       <div class="flex items-center gap-3 w-full sm:w-auto">
-        <!-- Logo Image Container -->
-        <div class="w-12 h-12 rounded-xl bg-slate-900 flex items-center justify-center p-1 shadow-lg shrink-0 border border-amber-500/30 overflow-hidden">
-          <img src="https://i.postimg.cc/0yS7bwYD/IMG-1822.jpg" alt="ZA Pro Logo" class="w-full h-full object-cover rounded-lg">
+        <!-- Logo -->
+        <div class="w-12 h-12 rounded-xl overflow-hidden border border-amber-500/40 shadow-lg shrink-0 bg-slate-900 flex items-center justify-center">
+          <img src="https://i.postimg.cc/0yS7bwYD/IMG-1822.jpg" alt="Logo" class="w-full h-full object-cover">
         </div>
         <div>
           <div class="flex items-center gap-2">
-            <h1 class="text-lg font-bold text-white tracking-wide">VATH ZA PRO</h1>
-            <span class="bg-amber-500/20 text-amber-400 text-xs px-2 py-0.5 rounded-full border border-amber-500/30 font-semibold">GEMINI 3.6</span>
+            <h1 class="text-lg font-bold text-white tracking-wide">ZA PRO</h1>
+            <span class="bg-amber-500/20 text-amber-400 text-xs px-2 py-0.5 rounded-full border border-amber-500/30 font-semibold">AUTO-MODEL</span>
           </div>
-          <p class="text-xs text-gray-400">ប្រព័ន្ធវិភាគ Chart មាសពិតៗដោយប្រើ AI ZA PRO</p>
+          <p class="text-xs text-gray-400">ប្រព័ន្ធវិភាគ Chart មាសពិតៗដោយប្រើ ZA PRO</p>
         </div>
       </div>
       
-      <button id="toggleApiKeyBtn" onclick="openKeyModal()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 font-semibold text-xs flex items-center justify-center gap-2 transition active:scale-95 shadow-md">
-        <i class="fa-solid fa-key"></i>
-        <span id="keyStatusText">កែប្រែ API Key</span>
-      </button>
+      <!-- Right Controls: About & API Key Buttons -->
+      <div class="flex items-center gap-2 w-full sm:w-auto">
+        <button onclick="openAboutModal()" class="flex-1 sm:flex-none px-3 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-gray-200 border border-slate-700 font-semibold text-xs flex items-center justify-center gap-1.5 transition active:scale-95 shadow-md">
+          <i class="fa-solid fa-circle-info text-amber-400"></i>
+          <span>អំពីយើង</span>
+        </button>
+
+        <button id="toggleApiKeyBtn" onclick="openKeyModal()" class="flex-1 sm:flex-none px-3 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 font-semibold text-xs flex items-center justify-center gap-1.5 transition active:scale-95 shadow-md">
+          <i class="fa-solid fa-key"></i>
+          <span id="keyStatusText">API Key</span>
+        </button>
+      </div>
     </div>
   </header>
 
   <!-- Main Container -->
   <main class="max-w-4xl mx-auto space-y-4">
-
-    <!-- Live Trading Chart Section (NEW) -->
-    <section class="glass-card rounded-2xl p-4 shadow-xl border-t-2 border-amber-500/40">
-      <h2 class="text-sm font-bold text-gray-200 mb-3 flex items-center gap-2">
-        <i class="fa-solid fa-chart-candlestick text-amber-400"></i> ក្រាហ្វិកតម្លៃទីផ្សារមាសផ្ទាល់ (XAUUSD Live Chart)
-      </h2>
-      <div class="w-full h-[380px] rounded-xl overflow-hidden border border-slate-800 bg-slate-950">
-        <!-- TradingView Widget BEGIN -->
-        <div class="tradingview-widget-container" style="height:100%;width:100%">
-          <div class="tradingview-widget-container__widget" style="height:100%;width:100%"></div>
-          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
-          {
-            "autosize": true,
-            "symbol": "OANDA:XAUUSD",
-            "interval": "1",
-            "timezone": "Asia/Bangkok",
-            "theme": "dark",
-            "style": "1",
-            "locale": "en",
-            "allow_symbol_change": false,
-            "calendar": false,
-            "support_host": "https://www.tradingview.com"
-          }
-          </script>
-        </div>
-        <!-- TradingView Widget END -->
-      </div>
-    </section>
 
     <!-- Upload & Action Box -->
     <section class="glass-card rounded-2xl p-4 shadow-xl">
@@ -112,11 +92,11 @@
       <!-- Quick Controls -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-3">
         <button id="sampleBtn" onclick="loadSampleChart()" class="py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-gray-200 border border-slate-700 flex items-center justify-center gap-2 active:scale-95 transition">
-          <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i> ប្រើ Chart គំរូ (Sample)
+          <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i> ប្រើ Chart គំរូ (មិនទានដំណើកា)
         </button>
 
         <button id="analyzeBtn" onclick="analyzeChartWithAI()" class="py-3 px-4 rounded-xl gold-gradient text-black font-bold text-xs shadow-lg flex items-center justify-center gap-2 active:scale-95 transition">
-          <i class="fa-solid fa-bolt"></i>  Analysis
+          <i class="fa-solid fa-bolt"></i> Analysis
         </button>
       </div>
     </section>
@@ -125,7 +105,7 @@
     <section class="glass-card rounded-2xl p-4 shadow-xl border-t-2 border-amber-500/40">
       <div class="flex items-center justify-between mb-3 border-b border-slate-800 pb-2">
         <h2 class="text-sm font-bold text-gray-200 flex items-center gap-2">
-          <i class="fa-solid fa-square-poll-vertical text-amber-400"></i> លទ្ធផល AI Signal Analysis
+          <i class="fa-solid fa-square-poll-vertical text-amber-400"></i> ZA PRO AI Signal Analysis
         </h2>
         <span id="winRateBadge" class="bg-slate-800 text-amber-400 text-[11px] px-2.5 py-0.5 rounded-full border border-amber-500/20 font-bold">
           Win Rate: --%
@@ -174,7 +154,7 @@
 
       <div id="chatBox" class="bg-slate-900/90 rounded-xl p-3 h-48 overflow-y-auto space-y-2 border border-slate-800 mb-3 text-xs">
         <div class="bg-slate-800/80 p-2.5 rounded-lg max-w-[85%] text-gray-300">
-          សួស្តី! ខ្ញុំជា AI ជំនួយការវិភាគ XAUUSD។ អ្នកអាចសួរសំណួរផ្សេងៗអំពីទីផ្សារមាសได้!
+          សួស្តី! ខ្ញុំជា AI ជំនួយការវិភាគ XAUUSD។ អ្នកអាចសួរសំណួរផ្សេងៗអំពីទីផ្សារមាសបាន!
         </div>
       </div>
 
@@ -188,6 +168,36 @@
 
   </main>
 
+  <!-- ABOUT MODAL (Updated with Profile & Custom Description) -->
+  <div id="aboutModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-card rounded-2xl p-5 max-w-md w-full shadow-2xl border border-amber-500/35 text-center">
+      <div class="flex justify-between items-center mb-2">
+        <h3 class="text-sm font-bold text-amber-400 flex items-center gap-2">
+          <i class="fa-solid fa-circle-info"></i> អំពីអ្នកបង្កើតវេបសាយ
+        </h3>
+        <button onclick="closeAboutModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <!-- Profile Image -->
+      <div class="flex justify-center my-3">
+        <div class="w-24 h-24 rounded-full overflow-hidden border-2 border-amber-500 shadow-xl bg-slate-900">
+          <img src="https://i.postimg.cc/RVS6W3D7/IMG-0978.jpg" alt="VATH Profile" class="w-full h-full object-cover">
+        </div>
+      </div>
+
+      <!-- Description Text -->
+      <div class="space-y-3 text-xs text-gray-300 leading-relaxed text-left bg-slate-900/80 p-3.5 rounded-xl border border-slate-800">
+        <p>
+          វេបសាយនេះបង្កើតឡើងដោយ <strong class="text-amber-400">VATH</strong> ក្នុងការបង្កើតវេបសាយនេះមកគឺជួយដល់ការវិភាគទៅលើ XAUUSD អោយបានខ្លាំង ព្រោះវាមាន AI ខ្លាំងៗក្នុងនោះដូចជា GPT, Gemini, Claude ក្នុងការធ្វើការចូលគ្នាដើម្បីបោះ Signal នឹងមានបង្ហាញ ENTRY PRICE នឹង TAKE PROFIT នឹង STOP LOSS (SL) បានល្អ នឹងមានមុខងារចាំឆ្លើយសំណួរក្នុងនោះទៀតផង។
+        </p>
+      </div>
+
+      <button onclick="closeAboutModal()" class="w-full mt-4 py-2.5 gold-gradient text-black font-bold text-xs rounded-xl shadow-md active:scale-95 transition">
+        យល់ព្រម / បិទ
+      </button>
+    </div>
+  </div>
+
   <!-- API KEY MODAL -->
   <div id="keyModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="glass-card rounded-2xl p-5 max-w-md w-full shadow-2xl border border-amber-500/30">
@@ -199,18 +209,18 @@
       </div>
 
       <p class="text-xs text-gray-300 mb-3 leading-relaxed">
-        ដើម្បីឱ្យ AI ដំណើរការវិភាគរូបភាពពិតៗ បាន អ្នកត្រូវបញ្ចូល Google Gemini API Key របស់អ្នក៖
+        បញ្ចូល API Key ថ្មីរបស់អ្នកនៅទីនេះ៖
       </p>
 
-      <input type="password" id="apiKeyInput" placeholder="AIzaSy..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white mb-3 focus:outline-none focus:border-amber-500">
+      <input type="text" id="apiKeyInput" placeholder="Paste API Key ថ្មីនៅទីនេះ (AIzaSy...)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white mb-3 focus:outline-none focus:border-amber-500">
 
       <div class="flex flex-col gap-2">
         <button onclick="saveApiKey()" class="w-full py-2.5 gold-gradient text-black font-bold text-xs rounded-xl shadow-md active:scale-95 transition">
-          រក្សាទុក Key
+          រក្សាទុក Key ថ្មី
         </button>
-        <a href="https://aistudio.google.com/" target="_blank" class="text-center text-[11px] text-amber-400 hover:underline">
-          👉 យក API Key ដោយឥតគិតថ្លៃនៅទីនេះ (aistudio.google.com)
-        </a>
+        <button onclick="clearStoredKey()" class="w-full py-2 bg-red-900/60 hover:bg-red-800 text-red-200 border border-red-700/50 font-bold text-xs rounded-xl transition">
+          លុប Key ចាស់ចោល (Clear Cache)
+        </button>
       </div>
     </div>
   </div>
@@ -222,9 +232,17 @@
       const savedKey = localStorage.getItem('gemini_api_key');
       if (savedKey) {
         document.getElementById('apiKeyInput').value = savedKey;
-        document.getElementById('keyStatusText').innerText = 'API Key រួចរាល់';
+        document.getElementById('keyStatusText').innerText = 'បានរក្សាទុក';
       }
     });
+
+    function openAboutModal() {
+      document.getElementById('aboutModal').classList.remove('hidden');
+    }
+
+    function closeAboutModal() {
+      document.getElementById('aboutModal').classList.add('hidden');
+    }
 
     function openKeyModal() {
       document.getElementById('keyModal').classList.remove('hidden');
@@ -241,9 +259,16 @@
         return;
       }
       localStorage.setItem('gemini_api_key', key);
-      document.getElementById('keyStatusText').innerText = 'API Key រួចរាល់';
+      document.getElementById('keyStatusText').innerText = 'បានរក្សាទុក';
       closeKeyModal();
-      alert('រក្សាទុក API Key ជោគជ័យ!');
+      alert('រក្សាទុក API Key ថ្មីជោគជ័យ!');
+    }
+
+    function clearStoredKey() {
+      localStorage.removeItem('gemini_api_key');
+      document.getElementById('apiKeyInput').value = '';
+      document.getElementById('keyStatusText').innerText = 'API Key';
+      alert('បានលុប API Key ចាស់ចេញពី Web រួចរាល់!');
     }
 
     function triggerFileInput() {
@@ -285,14 +310,33 @@
       document.getElementById('previewContainer').classList.remove('hidden');
     }
 
-    // Call Gemini 3.6 Flash Endpoint
-    async function callGeminiAPI(apiKey, bodyData) {
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(bodyData)
-      });
-      return await res.json();
+    async function callGeminiStableAPI(apiKey, bodyData) {
+      const activeModels = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-3.6-flash',
+        'gemini-3.7-flash'
+      ];
+
+      let lastErr = null;
+
+      for (const model of activeModels) {
+        try {
+          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(bodyData)
+          });
+          const data = await res.json();
+          if (!data.error) {
+            return data;
+          }
+          lastErr = data.error.message;
+        } catch (err) {
+          lastErr = err.message;
+        }
+      }
+      throw new Error(lastErr || "API Request Failed");
     }
 
     async function analyzeChartWithAI() {
@@ -334,11 +378,7 @@ Return STRICT JSON format ONLY like this:
           }]
         };
 
-        const data = await callGeminiAPI(apiKey, requestBody);
-
-        if (data.error) {
-          throw new Error(data.error.message);
-        }
+        const data = await callGeminiStableAPI(apiKey, requestBody);
 
         const rawText = data.candidates[0].content.parts[0].text;
         const jsonMatch = rawText.match(/\{[\s\S]*\}/);
@@ -363,7 +403,7 @@ Return STRICT JSON format ONLY like this:
         alert('ការវិភាគមានបញ្ហា៖ ' + err.message);
       } finally {
         analyzeBtn.disabled = false;
-        analyzeBtn.innerHTML = `<i class="fa-solid fa-bolt"></i>  Analysis`;
+        analyzeBtn.innerHTML = `<i class="fa-solid fa-bolt"></i> ⚡ វិភាគ Chart ដោយ AI ពិតប្រាកដ`;
       }
     }
 
@@ -394,12 +434,7 @@ Return STRICT JSON format ONLY like this:
           contents: [{ parts: [{ text: `You are an expert XAUUSD Gold Trading Assistant. Answer in Khmer: ${msg}` }] }]
         };
 
-        const data = await callGeminiAPI(apiKey, requestBody);
-
-        if (data.error) {
-          throw new Error(data.error.message);
-        }
-
+        const data = await callGeminiStableAPI(apiKey, requestBody);
         const reply = data.candidates[0].content.parts[0].text;
 
         chatBox.innerHTML += `
