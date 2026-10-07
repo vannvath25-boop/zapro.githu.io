@@ -3,395 +3,207 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SMM Pro - Multi Bot Panel</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style> body { font-family: 'Kantumruy Pro', sans-serif; } </style>
+    <title>Vath Store - Admin</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen p-4">
-
-    <div class="max-w-4xl mx-auto space-y-6">
+<body class="bg-slate-900 text-slate-100 font-sans p-6">
+    <div class="max-w-6xl mx-auto space-y-6">
+        <h1 class="text-2xl font-bold text-purple-400">ផ្ទាំងគ្រប់គ្រង Admin</h1>
         
-        <!-- Header & User Info Bar -->
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-slate-800 border border-slate-700 p-6 rounded-2xl shadow-xl gap-4">
-            <div>
-                <h1 class="text-xl font-bold text-indigo-400">SMM Pro - បញ្ជាទិញ & ដាក់ប្រាក់</h1>
-                <p class="text-sm text-slate-400" id="welcome-user">សូមស្វាគមន៍! (មិនទាន់បានចូលគណនី)</p>
-            </div>
-            <div class="flex items-center gap-4">
-                <div class="bg-slate-900 border border-slate-700 px-4 py-2 rounded-xl">
-                    <span class="text-xs text-slate-400 block">សមតុល្យទឹកប្រាក់</span>
-                    <span id="user-balance" class="text-emerald-400 font-bold text-lg">$0.00</span>
-                </div>
-                <button onclick="logout()" class="bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white px-3 py-2 rounded-xl text-sm transition">
-                    ចាកចេញ
-                </button>
-            </div>
-        </div>
-
-        <!-- AUTH SECTION -->
-        <div id="auth-section" class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-xl max-w-md mx-auto space-y-6">
-            <div class="flex border-b border-slate-700">
-                <button onclick="switchTab('login')" id="tab-login" class="flex-1 pb-3 font-bold text-indigo-400 border-b-2 border-indigo-500 transition">ចូលគណនី</button>
-                <button onclick="switchTab('register')" id="tab-register" class="flex-1 pb-3 font-semibold text-slate-400 transition">ចុះឈ្មោះ</button>
-            </div>
-
-            <!-- Login Form -->
-            <form id="form-login" onsubmit="handleLogin(event)" class="space-y-4">
-                <div>
-                    <label class="block text-sm text-slate-300 mb-1">Username</label>
-                    <input type="text" id="login-username" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-slate-200 focus:outline-none focus:border-indigo-500">
-                </div>
-                <div>
-                    <label class="block text-sm text-slate-300 mb-1">Password</label>
-                    <input type="password" id="login-password" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-slate-200 focus:outline-none focus:border-indigo-500">
-                </div>
-                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 rounded-xl transition">
-                    ចូលប្រព័ន្ធ
-                </button>
-            </form>
-
-            <!-- Register Form -->
-            <form id="form-register" onsubmit="handleRegister(event)" class="space-y-4 hidden">
-                <div>
-                    <label class="block text-sm text-slate-300 mb-1">ឈ្មោះពេញ (Full Name)</label>
-                    <input type="text" id="reg-fullname" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-slate-200 focus:outline-none focus:border-indigo-500">
-                </div>
-                <div>
-                    <label class="block text-sm text-slate-300 mb-1">Username</label>
-                    <input type="text" id="reg-username" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-slate-200 focus:outline-none focus:border-indigo-500">
-                </div>
-                <div>
-                    <label class="block text-sm text-slate-300 mb-1">Password</label>
-                    <input type="password" id="reg-password" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-slate-200 focus:outline-none focus:border-indigo-500">
-                </div>
-                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3 rounded-xl transition">
-                    ចុះឈ្មោះគណនី
-                </button>
-            </form>
-        </div>
-
-        <!-- DASHBOARD CONTENT -->
-        <div id="dashboard-section" class="space-y-6 hidden">
-            
-            <!-- Navigation Tabs -->
-            <div class="flex bg-slate-800 border border-slate-700 p-2 rounded-2xl shadow-xl gap-2">
-                <button onclick="switchDashboardTab('order')" id="dash-tab-order" class="flex-1 py-3 rounded-xl font-bold bg-indigo-600 text-white transition">
-                    🛒 បញ្ជាទិញសេវាកម្ម
-                </button>
-                <button onclick="switchDashboardTab('deposit')" id="dash-tab-deposit" class="flex-1 py-3 rounded-xl font-semibold text-slate-400 hover:text-white transition">
-                    💳 ដាក់ប្រាក់ (Deposit)
-                </button>
-            </div>
-
-            <!-- 1. ORDER SECTION -->
-            <div id="section-order" class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-xl space-y-6">
-                <h2 class="text-lg font-bold text-slate-200">បង្កើតការបញ្ជាទិញថ្មី (New Order)</h2>
-                
-                <form onsubmit="submitOrder(event)" class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-slate-300 mb-1">ជ្រើសរើស Category</label>
-                        <select id="order-category" onchange="updateServicesDropdown()" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-slate-200 focus:outline-none focus:border-indigo-500">
-                            <option value="facebook">Facebook Services</option>
-                            <option value="tiktok">TikTok Services</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-slate-300 mb-1">ជ្រើសរើសសេវាកម្ម (Service)</label>
-                        <select id="order-service" onchange="calculateTotal()" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-slate-200 focus:outline-none focus:border-indigo-500">
-                            <!-- Populated dynamically -->
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-slate-300 mb-1">តំណភ្ជាប់ (Link)</label>
-                        <input type="url" id="order-link" required placeholder="https://..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-slate-200 focus:outline-none focus:border-indigo-500">
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-slate-300 mb-1">ចំនួន (Quantity)</label>
-                        <input type="number" id="order-quantity" oninput="calculateTotal()" value="1000" min="100" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-slate-200 focus:outline-none focus:border-indigo-500">
-                    </div>
-
-                    <div class="bg-slate-900/60 border border-slate-700 p-4 rounded-xl flex justify-between items-center">
-                        <span class="text-slate-400">តម្លៃសរុប (Total Price):</span>
-                        <span id="order-total-price" class="text-2xl font-bold text-emerald-400">$0.00</span>
-                    </div>
-
-                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3.5 rounded-xl transition">
-                        បញ្ជាទិញឥឡូវនេះ (Submit Order)
-                    </button>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- បង្ហោះទំនិញ -->
+            <div class="bg-slate-800 p-5 rounded-2xl border border-slate-700">
+                <h3 class="font-bold mb-3 text-white">បង្ហោះទំនិញថ្មី</h3>
+                <form onsubmit="addNewProduct(event)" class="space-y-3">
+                    <input type="text" id="p-name" placeholder="ឈ្មោះទំនិញ" required class="w-full bg-slate-900 border border-slate-700 p-2 rounded-xl text-white">
+                    <input type="number" step="0.01" id="p-price" placeholder="តម្លៃ ($)" required class="w-full bg-slate-900 border border-slate-700 p-2 rounded-xl text-white">
+                    <input type="text" id="p-img" placeholder="Image URL" required class="w-full bg-slate-900 border border-slate-700 p-2 rounded-xl text-white">
+                    <textarea id="p-desc" placeholder="បរិយាយ" required class="w-full bg-slate-900 border border-slate-700 p-2 rounded-xl text-white"></textarea>
+                    <button type="submit" class="w-full bg-purple-600 text-white py-2 rounded-xl">បង្ហោះ</button>
                 </form>
             </div>
 
-            <!-- 2. DEPOSIT SECTION -->
-            <div id="section-deposit" class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-xl space-y-6 hidden">
-                <h2 class="text-lg font-bold text-slate-200">ស្នើសុំដាក់ប្រាក់បន្ថែម (Add Funds / Deposit)</h2>
-
-                <div class="bg-slate-900/80 border border-slate-700 p-6 rounded-2xl flex flex-col sm:flex-row items-center gap-6">
-                    <div class="bg-white p-3 rounded-2xl shadow-lg shrink-0">
-                        <img src="https://i.postimg.cc/vZBZMWDf/IMG-0958.jpg" alt="ABA QR Code" class="w-36 h-36 object-contain rounded-xl">
-                    </div>
-                    <div class="space-y-3 text-center sm:text-left">
-                        <h3 class="text-base font-bold text-slate-100">ស្កេន QR Code ដើម្បីទូទាត់ប្រាក់</h3>
-                        <p class="text-xs text-amber-400 bg-amber-500/10 p-2.5 rounded-lg border border-amber-500/20">
-                            ⚠️ បន្ទាប់ពីស្កេនបង់ប្រាក់រួច សូមបំពេញចំនួនទឹកប្រាក់ និង Upload រូបភាពវិក្កយបត្រ (Slip) ខាងក្រោម។
-                        </p>
-                    </div>
-                </div>
-                
-                <form onsubmit="submitDeposit(event)" class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-slate-300 mb-1">ចំនួនទឹកប្រាក់ដែលបានដាក់ ($)</label>
-                        <input type="number" step="0.01" id="deposit-amount" required placeholder="10.00" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-slate-200 focus:outline-none focus:border-emerald-500">
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-slate-300 mb-1">ភ្ជាប់រូបភាពវិក្កយបត្រ (Upload Payment Slip)</label>
-                        <input type="file" id="deposit-slip" accept="image/*" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-slate-300 text-sm">
-                    </div>
-
-                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3.5 rounded-xl transition">
-                        ស្នើសុំដាក់ប្រាក់ចូល Telegram Bot
-                    </button>
+            <!-- បន្ថែមស្តុក -->
+            <div class="bg-slate-800 p-5 rounded-2xl border border-slate-700">
+                <h3 class="font-bold mb-3 text-white">បន្ថែមស្តុក (Gmail & Pass)</h3>
+                <form onsubmit="addStock(event)" class="space-y-3">
+                    <select id="stock-prod-select" required class="w-full bg-slate-900 border border-slate-700 p-2 rounded-xl text-white"><option value="">-- ជ្រើសរើសទំនិញ --</option></select>
+                    <input type="text" id="stock-gmail" placeholder="Gmail" required class="w-full bg-slate-900 border border-slate-700 p-2 rounded-xl text-white">
+                    <input type="text" id="stock-pass" placeholder="Password" required class="w-full bg-slate-900 border border-slate-700 p-2 rounded-xl text-white">
+                    <button type="submit" class="w-full bg-emerald-600 text-white py-2 rounded-xl">បន្ថែមស្តុក</button>
                 </form>
             </div>
-
         </div>
 
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- បញ្ជីទំនិញ និងបង្ហាញចំនួនស្តុកដែលនៅសល់ -->
+            <div class="bg-slate-800 p-5 rounded-2xl border border-slate-700">
+                <h3 class="font-bold mb-3 text-white">បញ្ជីរាយនាមទំនិញ និងស្តុកដែលនៅសល់</h3>
+                <div id="admin-product-list" class="space-y-2 max-h-80 overflow-y-auto"></div>
+            </div>
+
+            <!-- បញ្ជីអ្នកប្រើប្រាស់ និងមុខងារដាក់ប្រាក់ -->
+            <div class="bg-slate-800 p-5 rounded-2xl border border-slate-700">
+                <h3 class="font-bold mb-3 text-white">បញ្ជីរាយនាមអ្នកប្រើប្រាស់ និងដាក់ប្រាក់</h3>
+                <div id="admin-user-list" class="space-y-3 max-h-80 overflow-y-auto"></div>
+            </div>
+        </div>
     </div>
 
     <script>
-        const ORDER_BOT_TOKEN = '8960855547:AAHX0xQqYqUvTwkYwsVD4iUw1-WXnT2oLg0'; 
-        const ORDER_CHAT_ID = '8621369358';
-        const DEPOSIT_BOT_TOKEN = '8712683121:AAEdJfI8UNpfdpIJaT4TLMBGMlKRmEQs_rw'; 
-        const DEPOSIT_CHAT_ID = '8621369358';
+        const firebaseConfig = {
+            apiKey: "AIzaSyA6JBMYclKJpDK59g7jDjGNPaqFxnD7aTc",
+            authDomain: "vath-52dab.firebaseapp.com",
+            databaseURL: "https://vath-52dab-default-rtdb.firebaseio.com",
+            projectId: "vath-52dab",
+            storageBucket: "vath-52dab.appspot.com",
+            messagingSenderId: "836955835633",
+            appId: "1:836955835633:web:4f8bf0eb4fa4e4e27b6d50"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
 
         window.onload = function() {
-            checkAuth();
-            updateServicesDropdown();
+            loadProductsWithStockCount();
+            loadAdminUsers();
         };
 
-        function switchDashboardTab(tab) {
-            const secOrder = document.getElementById('section-order');
-            const secDeposit = document.getElementById('section-deposit');
-            const tabOrder = document.getElementById('dash-tab-order');
-            const tabDeposit = document.getElementById('dash-tab-deposit');
-
-            if (tab === 'order') {
-                secOrder.classList.remove('hidden');
-                secDeposit.classList.add('hidden');
-                tabOrder.className = "flex-1 py-3 rounded-xl font-bold bg-indigo-600 text-white transition";
-                tabDeposit.className = "flex-1 py-3 rounded-xl font-semibold text-slate-400 hover:text-white transition";
-            } else {
-                secOrder.classList.add('hidden');
-                secDeposit.classList.remove('hidden');
-                tabDeposit.className = "flex-1 py-3 rounded-xl font-bold bg-emerald-600 text-white transition";
-                tabOrder.className = "flex-1 py-3 rounded-xl font-semibold text-slate-400 hover:text-white transition";
-            }
-        }
-
-        function switchTab(tab) {
-            const loginForm = document.getElementById('form-login');
-            const regForm = document.getElementById('form-register');
-            const tabLogin = document.getElementById('tab-login');
-            const tabReg = document.getElementById('tab-register');
-
-            if (tab === 'login') {
-                loginForm.classList.remove('hidden');
-                regForm.classList.add('hidden');
-                tabLogin.className = "flex-1 pb-3 font-bold text-indigo-400 border-b-2 border-indigo-500 transition";
-                tabReg.className = "flex-1 pb-3 font-semibold text-slate-400 transition";
-            } else {
-                loginForm.classList.add('hidden');
-                regForm.classList.remove('hidden');
-                tabReg.className = "flex-1 pb-3 font-bold text-emerald-400 border-b-2 border-emerald-500 transition";
-                tabLogin.className = "flex-1 pb-3 font-semibold text-slate-400 transition";
-            }
-        }
-
-        function handleRegister(e) {
-            e.preventDefault();
-            const fullname = document.getElementById('reg-fullname').value.trim();
-            const username = document.getElementById('reg-username').value.trim();
-            const password = document.getElementById('reg-password').value.trim();
-
-            let users = JSON.parse(localStorage.getItem('smm_users')) || [];
-            if (users.some(u => u.username === username)) {
-                alert('Username នេះមានអ្នកប្រើប្រាស់រួចហើយ!');
-                return;
-            }
-
-            const newUser = { fullname, username, password, balance: 0.00 };
-            users.push(newUser);
-            localStorage.setItem('smm_users', JSON.stringify(users));
-            localStorage.setItem('smm_current_user', JSON.stringify(newUser));
-
-            alert('ចុះឈ្មោះជោគជ័យ!');
-            checkAuth();
-        }
-
-        function handleLogin(e) {
-            e.preventDefault();
-            const username = document.getElementById('login-username').value.trim();
-            const password = document.getElementById('login-password').value.trim();
-
-            let users = JSON.parse(localStorage.getItem('smm_users')) || [];
-            let user = users.find(u => u.username === username && u.password === password);
-
-            if (user) {
-                localStorage.setItem('smm_current_user', JSON.stringify(user));
-                checkAuth();
-            } else {
-                alert('Username ឬ Password មិនត្រឹមត្រូវទេ!');
-            }
-        }
-
-        function logout() {
-            localStorage.removeItem('smm_current_user');
-            checkAuth();
-        }
-
-        function checkAuth() {
-            let currentUser = JSON.parse(localStorage.getItem('smm_current_user'));
-            if (currentUser) {
-                let users = JSON.parse(localStorage.getItem('smm_users')) || [];
-                let freshUser = users.find(u => u.username === currentUser.username);
-                if (freshUser) {
-                    currentUser = freshUser;
-                    localStorage.setItem('smm_current_user', JSON.stringify(currentUser));
+        function loadProductsWithStockCount() {
+            // ទាញយកស្តុកទាំងអស់មកឆែកមើលចំនួនសរុប និងចំនួនដែលនៅទំនេរ
+            db.ref('stocks').on('value', (stockSnap) => {
+                const stockCounts = {};
+                if(stockSnap.exists()) {
+                    stockSnap.forEach(c => {
+                        const st = c.val();
+                        if(st.status === 'available') {
+                            stockCounts[st.productId] = (stockCounts[st.productId] || 0) + 1;
+                        }
+                    });
                 }
 
-                document.getElementById('auth-section').classList.add('hidden');
-                document.getElementById('dashboard-section').classList.remove('hidden');
-                document.getElementById('welcome-user').innerText = `សួស្តី, ${currentUser.fullname || currentUser.username}`;
-                document.getElementById('user-balance').innerText = `$${(currentUser.balance || 0).toFixed(2)}`;
-            } else {
-                document.getElementById('auth-section').classList.remove('hidden');
-                document.getElementById('dashboard-section').classList.add('hidden');
-                document.getElementById('welcome-user').innerText = `សូមស្វាគមន៍! (មិនទាន់បានចូលគណនី)`;
-            }
-        }
+                // ទាញយកទំនិញមកបង្ហាញ
+                db.ref('products').on('value', (prodSnap) => {
+                    const sel = document.getElementById('stock-prod-select');
+                    const prodList = document.getElementById('admin-product-list');
+                    
+                    sel.innerHTML = '<option value="">-- ជ្រើសរើសទំនិញ --</option>';
+                    prodList.innerHTML = '';
 
-        function updateServicesDropdown() {
-            const catId = document.getElementById('order-category').value;
-            const servSelect = document.getElementById('order-service');
-            servSelect.innerHTML = '';
+                    if(prodSnap.exists()) {
+                        prodSnap.forEach(c => {
+                            const p = c.val();
+                            const availableCount = stockCounts[p.id] || 0;
 
-            let services = {
-                'facebook': [{ name: 'Facebook Page Likes', pricePer1k: 2.5 }],
-                'tiktok': [{ name: 'TikTok Followers', pricePer1k: 3.0 }]
-            };
-
-            if (services[catId]) {
-                services[catId].forEach((serv, index) => {
-                    servSelect.innerHTML += `<option value="${index}" data-price="${serv.pricePer1k}">${serv.name} ($${serv.pricePer1k}/1k)</option>`;
+                            sel.innerHTML += `<option value="${p.id}">${p.name} ($${p.price})</option>`;
+                            prodList.innerHTML += `
+                                <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 flex items-center justify-between">
+                                    <div class="flex items-center space-x-3">
+                                        <img src="${p.image}" class="w-10 h-10 rounded-lg object-cover">
+                                        <div>
+                                            <h5 class="font-bold text-sm text-white">${p.name}</h5>
+                                            <p class="text-xs text-indigo-400">$${p.price} | <span class="text-emerald-400 font-semibold">ស្តុកនៅសល់: ${availableCount}</span></p>
+                                        </div>
+                                    </div>
+                                    <button onclick="deleteProduct('${p.id}')" class="bg-rose-500/10 text-rose-400 p-2 rounded-lg text-xs" title="លុបទំនិញ"><i class="fa-solid fa-trash"></i></button>
+                                </div>
+                            `;
+                        });
+                    } else {
+                        prodList.innerHTML = `<p class="text-slate-400 text-sm text-center">មិនទាន់មានទំនិញ</p>`;
+                    }
                 });
-            }
-            calculateTotal();
+            });
         }
 
-        function calculateTotal() {
-            const servSelect = document.getElementById('order-service');
-            const selectedOption = servSelect.options[servSelect.selectedIndex];
-            const pricePer1k = parseFloat(selectedOption ? selectedOption.getAttribute('data-price') || 0 : 0);
-            const quantity = parseInt(document.getElementById('order-quantity').value) || 0;
-
-            const totalPrice = (pricePer1k / 1000) * quantity;
-            document.getElementById('order-total-price').innerText = `$${totalPrice.toFixed(2)}`;
+        function loadAdminUsers() {
+            db.ref('users').on('value', (snap) => {
+                const userList = document.getElementById('admin-user-list');
+                userList.innerHTML = '';
+                if(snap.exists()) {
+                    snap.forEach(c => {
+                        const u = c.val();
+                        userList.innerHTML += `
+                            <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-700 space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-3">
+                                        <img src="${u.avatar || ''}" class="w-9 h-9 rounded-full object-cover">
+                                        <div>
+                                            <h5 class="font-bold text-sm text-white">${u.name}</h5>
+                                            <p class="text-xs text-slate-400">${u.email} | <span class="text-emerald-400 font-bold">កាបូប: $${(u.balance || 0).toFixed(2)}</span></p>
+                                        </div>
+                                    </div>
+                                    <button onclick="deleteUser('${u.id}')" class="bg-rose-500/10 text-rose-400 p-2 rounded-lg text-xs" title="លុបអ្នកប្រើ"><i class="fa-solid fa-trash"></i></button>
+                                </div>
+                                <div class="flex space-x-2 pt-1 border-t border-slate-800">
+                                    <input type="number" step="0.01" id="add-bal-${u.id}" placeholder="ចំនួនទឹកប្រាក់ ($)" class="w-full bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-lg text-xs text-white">
+                                    <button onclick="addUserBalance('${u.id}')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition">ដាក់ប្រាក់</button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    userList.innerHTML = `<p class="text-slate-400 text-sm text-center">មិនទាន់មានអ្នកប្រើប្រាស់</p>`;
+                }
+            });
         }
 
-        function submitOrder(e) {
-            e.preventDefault();
-            let currentUser = JSON.parse(localStorage.getItem('smm_current_user'));
-            if (!currentUser) return;
+        function addUserBalance(userId) {
+            const amountInput = document.getElementById(`add-bal-${userId}`);
+            const amount = parseFloat(amountInput.value);
 
-            const catSelect = document.getElementById('order-category');
-            const servSelect = document.getElementById('order-service');
-            const link = document.getElementById('order-link').value;
-            const quantity = parseInt(document.getElementById('order-quantity').value);
-            
-            const categoryName = catSelect.options[catSelect.selectedIndex].text;
-            const serviceOption = servSelect.options[servSelect.selectedIndex];
-            const serviceName = serviceOption.text.split(' ($')[0];
-            const pricePer1k = parseFloat(serviceOption.getAttribute('data-price') || 0);
-            const totalPrice = (pricePer1k / 1000) * quantity;
-
-            if ((currentUser.balance || 0) < totalPrice) {
-                alert('ទឹកប្រាក់ក្នុងកាបូបរបស់អ្នកមិនគ្រប់គ្រាន់ទេ! សូមដាក់ប្រាក់បន្ថែម។');
-                return;
-            }
-
-            currentUser.balance -= totalPrice;
-            
-            let users = JSON.parse(localStorage.getItem('smm_users')) || [];
-            users = users.map(u => u.username === currentUser.username ? currentUser : u);
-            localStorage.setItem('smm_users', JSON.stringify(users));
-            localStorage.setItem('smm_current_user', JSON.stringify(currentUser));
-
-            checkAuth();
-
-            sendTelegram(`🚨 <b>ការបញ្ជាទិញថ្មី!</b>\n👤 អតិថិជន: ${currentUser.username}\n📦 សេវាកម្ម: ${serviceName}\n🔗 លីង: ${link}\n🔢 ចំនួន: ${quantity}\n💰 សរុប: $${totalPrice.toFixed(2)}`, ORDER_BOT_TOKEN, ORDER_CHAT_ID);
-
-            alert('ការបញ្ជាទិញបានជោគជ័យ!');
-            document.getElementById('order-link').value = '';
-        }
-
-        function submitDeposit(e) {
-            e.preventDefault();
-            let currentUser = JSON.parse(localStorage.getItem('smm_current_user'));
-            if (!currentUser) return;
-
-            const amount = parseFloat(document.getElementById('deposit-amount').value);
-            const slipInput = document.getElementById('deposit-slip');
-
-            if (isNaN(amount) || amount <= 0) {
+            if(!amount || amount <= 0) {
                 alert('សូមបញ្ចូលចំនួនទឹកប្រាក់ឱ្យបានត្រឹមត្រូវ!');
                 return;
             }
 
-            const caption = `💳 <b>សំណើដាក់ប្រាក់ថ្មី!</b>\n👤 អតិថិជន: ${currentUser.username}\n💵 ចំនួន: $${amount.toFixed(2)}`;
+            db.ref('users/' + userId + '/balance').once('value').then((snap) => {
+                let currentBal = snap.val() || 0;
+                let newBal = currentBal + amount;
 
-            if (slipInput.files && slipInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    sendTelegramPhoto(event.target.result, caption);
-                };
-                reader.readAsDataURL(slipInput.files[0]);
-            } else {
-                sendTelegram(caption, DEPOSIT_BOT_TOKEN, DEPOSIT_CHAT_ID);
+                db.ref('users/' + userId + '/balance').set(newBal).then(() => {
+                    alert(`បានបន្ថែមទឹកប្រាក់ចំនួន $${amount.toFixed(2)} ជូនអតិថិជនជោគជ័យ!`);
+                    amountInput.value = '';
+                });
+            }).catch(err => alert('មានបញ្ហា: ' + err.message));
+        }
+
+        function addNewProduct(e) {
+            e.preventDefault();
+            const id = 'product_' + Date.now();
+            db.ref('products/' + id).set({
+                id: id,
+                name: document.getElementById('p-name').value,
+                price: parseFloat(document.getElementById('p-price').value),
+                image: document.getElementById('p-img').value,
+                description: document.getElementById('p-desc').value
+            }).then(() => { alert('បង្ហោះទំនិញជោគជ័យ!'); location.reload(); });
+        }
+
+        function deleteProduct(id) {
+            if(confirm('តើអ្នកពិតជាចង់លុបទំនិញនេះមែនទេ?')) {
+                db.ref('products/' + id).remove().then(() => alert('លុបជោគជ័យ!'));
             }
-
-            alert('សំណើដាក់ប្រាក់ត្រូវបានបញ្ជូនទៅកាន់ Admin ហើយ!');
-            document.getElementById('deposit-amount').value = '';
-            slipInput.value = '';
-            switchDashboardTab('order');
         }
 
-        function sendTelegram(message, token, chatId) {
-            fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: chatId, text: message, parse_mode: 'HTML' })
-            }).catch(err => console.error(err));
+        function deleteUser(id) {
+            if(confirm('តើអ្នកពិតជាចង់លុបអ្នកប្រើប្រាស់នេះមែនទេ?')) {
+                db.ref('users/' + id).remove().then(() => alert('លុបអ្នកប្រើប្រាស់ជោគជ័យ!'));
+            }
         }
 
-        function sendTelegramPhoto(base64Data, caption) {
-            fetch(base64Data)
-                .then(res => res.blob())
-                .then(blob => {
-                    const formData = new FormData();
-                    formData.append('chat_id', DEPOSIT_CHAT_ID);
-                    formData.append('photo', blob, 'slip.jpg');
-                    formData.append('caption', caption);
-                    formData.append('parse_mode', 'HTML');
-
-                    return fetch(`https://api.telegram.org/bot${DEPOSIT_BOT_TOKEN}/sendPhoto`, {
-                        method: 'POST',
-                        body: formData
-                    });
-                }).catch(err => console.error(err));
+        function addStock(e) {
+            e.preventDefault();
+            const id = 'stock_' + Date.now();
+            db.ref('stocks/' + id).set({
+                id: id,
+                productId: document.getElementById('stock-prod-select').value,
+                gmail: document.getElementById('stock-gmail').value,
+                password: document.getElementById('stock-pass').value,
+                status: 'available'
+            }).then(() => { alert('បន្ថែមស្តុករួចរាល់!'); location.reload(); });
         }
     </script>
 </body>
